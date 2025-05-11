@@ -15,6 +15,10 @@ TinyGPSPlus gps;
 // 定义 Asia/Shanghai 时区
 static BasicZoneProcessor localTzProcessor;
 TimeZone localTz = TimeZone::forZoneInfo(&zonedb::kZoneAsia_Shanghai, &localTzProcessor);
+// 星期映射数组（1=星期日，2=星期一，...，7=星期六）
+static const char* const WEEKDAYS[] PROGMEM = {
+  "", "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"
+};
 
 // 全局变量
 volatile unsigned long ppsTime = 0;     // 存储 PPS 时间
@@ -110,6 +114,8 @@ void loop()
         Serial.print(F(":"));
         Serial.print(localTime.second() < 10 ? F("0") : F(""));
         Serial.print(localTime.second());
+        Serial.print(F(" | Day: "));
+        Serial.print(FPSTR(WEEKDAYS[localTime.dayOfWeek()])); // 输出星期，如 MON
         //        Serial.print(F(" | Lat: "));
         //        Serial.print(gps.location.lat(), 6);
         //        Serial.print(F(" | Lon: "));
