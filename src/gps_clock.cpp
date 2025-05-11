@@ -16,7 +16,7 @@ TinyGPSPlus gps;
 // 定义 Asia/Shanghai 时区
 static BasicZoneProcessor localTzProcessor;
 TimeZone localTz = TimeZone::forZoneInfo(&zonedb::kZoneAsia_Shanghai, &localTzProcessor);
-// 星期映射数组（1=星期日，2=星期一，...，7=星期六）
+// 星期映射数组（ 1=MON, ..., 6=SAT, 7=SUN）
 static const char *const WEEKDAYS[] PROGMEM = {
     "", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
 
