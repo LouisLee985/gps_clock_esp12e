@@ -1,6 +1,7 @@
 #include <SoftwareSerial.h> // GPS通信的软件串口库
 #include <TinyGPS++.h>      // GPS解析库
 #include <AceTime.h>        // AceTime 时间和时区处理库
+#include <ESP.h>
 using namespace ace_time;
 
 // 定义引脚
@@ -17,7 +18,7 @@ static BasicZoneProcessor localTzProcessor;
 TimeZone localTz = TimeZone::forZoneInfo(&zonedb::kZoneAsia_Shanghai, &localTzProcessor);
 // 星期映射数组（1=星期日，2=星期一，...，7=星期六）
 static const char* const WEEKDAYS[] PROGMEM = {
-  "", "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"
+  "", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"
 };
 
 // 全局变量
@@ -37,6 +38,7 @@ IRAM_ATTR void ppsInterrupt()
 
 void setup()
 {
+  ESP.wdtEnable(8000); // 8秒看门狗
   Serial.begin(115200);
   gpsSerial.begin(38400);
   pinMode(GPS_PPS_PIN, INPUT);
@@ -50,7 +52,9 @@ void loop()
   //  if (!gpsSerial.available()) {
   //    delay(10); // 无数据时短暂暂停，降低 CPU 占用
   //  }
-
+  
+  ESP.wdtFeed();
+  
   while (gpsSerial.available() > 0)
   {
     if (gps.encode(gpsSerial.read()) && gps.location.isValid() && gps.time.isValid() && gps.date.isValid())
@@ -122,6 +126,8 @@ void loop()
         //        Serial.print(gps.location.lng(), 6);
         Serial.print(F(" | PPS Count: "));
         Serial.println(ppsCount);
+		Serial.print(F(" | DayOfWeek: "));
+        Serial.println(localTime.dayOfWeek()); // 输出 dayOfWeek 值
       }
     }
     else
