@@ -17,9 +17,8 @@ TinyGPSPlus gps;
 static BasicZoneProcessor localTzProcessor;
 TimeZone localTz = TimeZone::forZoneInfo(&zonedb::kZoneAsia_Shanghai, &localTzProcessor);
 // 星期映射数组（1=星期日，2=星期一，...，7=星期六）
-static const char* const WEEKDAYS[] PROGMEM = {
-  "", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"
-};
+static const char *const WEEKDAYS[] PROGMEM = {
+    "", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
 
 // 全局变量
 volatile unsigned long ppsTime = 0;     // 存储 PPS 时间
@@ -52,9 +51,9 @@ void loop()
   //  if (!gpsSerial.available()) {
   //    delay(10); // 无数据时短暂暂停，降低 CPU 占用
   //  }
-  
+
   ESP.wdtFeed();
-  
+
   while (gpsSerial.available() > 0)
   {
     if (gps.encode(gpsSerial.read()) && gps.location.isValid() && gps.time.isValid() && gps.date.isValid())
@@ -125,8 +124,8 @@ void loop()
         //        Serial.print(F(" | Lon: "));
         //        Serial.print(gps.location.lng(), 6);
         Serial.print(F(" | PPS Count: "));
-        Serial.println(ppsCount);
-		Serial.print(F(" | DayOfWeek: "));
+        Serial.print(ppsCount);
+        Serial.print(F(" | DayOfWeek: "));
         Serial.println(localTime.dayOfWeek()); // 输出 dayOfWeek 值
       }
     }
